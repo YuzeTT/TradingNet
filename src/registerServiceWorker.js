@@ -2,6 +2,13 @@
 
 import { register } from 'register-service-worker'
 
+const notifyOffline = async function (data) {
+  if (Notification.permission === 'default') {
+    await Notification.requestPermission()
+  }
+  new Notification('网络已断开', { body: '正在以离线模式浏览' })
+}
+
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready () {
