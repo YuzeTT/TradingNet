@@ -7,6 +7,9 @@ import vuetify from './plugins/vuetify'
 
 Vue.config.productionTip = false
 
+import tdnet from './tdnet.config'
+Vue.prototype.$tdnetCfg = tdnet
+
 new Vue({
   router,
   store,

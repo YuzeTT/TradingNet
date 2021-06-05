@@ -2,35 +2,8 @@
   <!-- <hello-world /> -->
   <div>
     <!-- <v-system-bar app fixed ></v-system-bar> -->
+    <Navbar/>
     <div class="pa-5">
-      
-      <v-card elevation="0">
-        <v-row
-          align="center"
-          justify="space-around"
-          class="pa-2"
-        >
-          <v-btn
-            large
-            elevation="0"
-            icon
-            outlined
-            tile
-            style="border: 2px solid #EDEFF2;border-radius:15px"
-          >
-            <v-icon large>mdi-equal</v-icon>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
-            large
-            elevation="0"
-            icon
-            @click="switchDark()"
-          >
-            <v-icon>mdi-brightness-4 </v-icon>
-          </v-btn>
-        </v-row>
-      </v-card>
       <div class="ma-6"></div>
       <v-card elevation="0">
         <div>
@@ -42,46 +15,29 @@
       </v-card>
       <div class="ma-6"></div>
       <v-card elevation="0">
-        <v-row
-          align="start"
-          no-gutters
-          style="height: 150px;"
-        >
-          <v-col>
-            <v-card
-              elevation="0"
-              style="border: 2px solid #EDEFF2;border-radius:15px"
-              class="pa-4"
-            >
-              <v-icon
-                medium
-                color="green lighten-1"
-              >mdi-console-line</v-icon>
-              <div class="py-1"></div>
-              <span class="text-h4 font-weight-bold">126 ms</span>
-              <br>
-              <span class="text--disabled">编译耗时</span>
-            </v-card>
-          </v-col>
-          <div class="pa-1"></div>
-          <v-col>
-            <v-card
-              elevation="0"
-              style="border: 2px solid #EDEFF2;border-radius:15px"
-              class="pa-4"
-            >
-              <v-icon
-                medium
-                color="red"
-              >mdi-database-alert</v-icon>
-              <div class="py-1"></div>
-              <span class="text-h4 font-weight-bold">0 %</span>
-              <br>
-              <span class="text--disabled">数据库错误率</span>
-            </v-card>
-          </v-col>
-        </v-row>
+        <div class="d-flex flex-wrap pa-1">
+          <v-row>
+              <v-col sm="6" md="4" lg="2" class="pa-1"
+                v-for="item in this.homeCard"
+                :key="item.text">
+                <v-card
+                  elevation="0"
+                  style="border: 2px solid #EDEFF2;border-radius:15px"
+                  class="pa-4">
+                  <v-icon
+                    medium
+                    :color="item.leftIconColor"
+                  >{{ item.leftIcon }}</v-icon>
+                  <div class="py-1"></div>
+                  <span class="text-h4 font-weight-bold nowrap">{{ item.text }}</span>
+                  <br>
+                  <span class="text--disabled nowrap">{{ item.describe }}</span>
+                </v-card>
+              </v-col>
+          </v-row>
+        </div>
       </v-card>
+      <!-- <v-btn @click="test()">test</v-btn> -->
     </div>
   </div>
 </template>
@@ -91,22 +47,103 @@ body {
   padding: 0;
   margin: 0;
 }
+
+.nowrap {
+  white-space:nowrap
+}
 </style>
 
 <script>
   // import HelloWorld from '../components/HelloWorld'
   import theme from '../plugins/theme'
+  import Navbar from '../components/Navbar.vue'
   export default {
     name: 'Home',
     components: {
-      // HelloWorld,
+      Navbar
     },
-    data: () => ({ value: 1 }),
+    data: () => ({ 
+      homeCard: [
+        {
+          leftIcon: 'mdi-console-line',
+          leftIconColor: 'green lighten-1',
+          rightIcon: false,
+          rightIconColor: false,
+          text: '?ms',
+          describe: '编译耗时',
+          jump: false,
+        },
+        {
+          leftIcon: 'mdi-database-alert',
+          leftIconColor: 'red',
+          rightIcon: false,
+          rightIconColor: false,
+          text: '0%',
+          describe: '数据库错误率',
+          jump: false,
+        },
+        {
+          leftIcon: 'mdi-update',
+          leftIconColor: 'blue lighten-1',
+          rightIcon: false,
+          rightIconColor: false,
+          text: 'v.0.1.0',
+          describe: '软件版本',
+          jump: false,
+        }
+      ],
+      drawer: false,
+      group: null,
+    }),
+    mounted() {
+      for(let item of this.$tdnetCfg.navigationList) {
+        if(item.name == this.$route.name) {
+          console.log("truie")
+          this.group = item.id
+        }
+      }
+      
+    },
     methods: {
       switchDark:function() {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
         theme.dark = !theme.dark
-      }
-    }
+      },
+      inDisabledList: function(name) {
+        if (name == this.$route.name) {
+            return true
+        }
+        return false
+      },
+      // test: function() {
+      //   console.log(this.$tdnetCfg.navigationList)
+      // }
+    },
+    watch: {
+      // group () {
+      //   this.drawer = false
+      // },
+      // $route: { 
+      //   handler: function () {
+      //     this.inBanMenuRoutes = (() => {
+      //       const currentRoute = this.$route.name
+      //       var i
+      //       for (i of this.$ctConfig.banMenuRoutes) {
+      //         if (currentRoute == i) {
+      //           return true
+      //         }
+      //       }
+      //       return false
+      //     })()
+
+      //     this.inDisabledList = ((name) => {
+      //       if (name == this.$route.name) {
+      //           return true
+      //       }
+      //       return false
+      //     })
+      //   },
+      // }
+    },
   }
 </script>
