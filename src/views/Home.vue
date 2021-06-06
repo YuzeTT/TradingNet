@@ -18,7 +18,7 @@
         <div class="d-flex flex-wrap pa-1">
           <v-row>
               <v-col sm="6" md="4" lg="2" class="pa-1"
-                v-for="item in this.homeCard"
+                v-for="item in this.$tdnetCfg.homeCard"
                 :key="item.text">
                 <v-card
                   elevation="0"
@@ -37,7 +37,21 @@
           </v-row>
         </div>
       </v-card>
+      <div class="ma-6"></div>
+      <v-card elevation="0">
+        <div class="d-flex flex-wrap pa-1">
+          <v-row>
+              <v-col xs="12" sm="6" md="4" lg="2" class="pa-1" 
+                >
+                <v-card elevation="0" class="pa-0 ma-0" min-width="200px" height="100%" style="overflow: auto;border: 2px solid #EDEFF2;border-radius:15px">
+                  <tradingview-widget-container class="pb-0" />
+                </v-card>
+              </v-col>
+          </v-row>
+        </div>
+      </v-card>
       <!-- <v-btn @click="test()">test</v-btn> -->
+      <!-- <tradingview-widget-container/> -->
     </div>
   </div>
 </template>
@@ -51,57 +65,44 @@ body {
 .nowrap {
   white-space:nowrap
 }
+
+.tradingview-widget-container{
+  width: 10px;
+  height: 10px;
+  padding-top:100px
+}
 </style>
 
 <script>
+  // import {tradingviewWidgetContainer} from '../components/tradingview'
   // import HelloWorld from '../components/HelloWorld'
   import theme from '../plugins/theme'
   import Navbar from '../components/Navbar.vue'
   export default {
     name: 'Home',
     components: {
-      Navbar
+      Navbar,
+      'tradingview-widget-container': {
+        render(createElement) {
+          return createElement('script', 
+            { 
+              attrs: { 
+                type: 'text/javascript', 
+                src: 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js' }, 
+                domProps: {innerHTML: '{"symbol": "OKEX:BTCUSDT","width": "100%","height": "100%","locale": "zh_CN","dateRange": "1D","colorTheme": "light","trendLineColor": "rgba(33, 150, 243, 1)","underLineColor": "rgba(33, 150, 243, 0.3)","underLineBottomColor": "rgba(33, 150, 243, 0.0)","isTransparent": false,"autosize": true,"largeChartUrl": ""}',
+                style: this.style
+              },
+            }
+          );
+        }
+      },
     },
     data: () => ({ 
-      homeCard: [
-        {
-          leftIcon: 'mdi-console-line',
-          leftIconColor: 'green lighten-1',
-          rightIcon: false,
-          rightIconColor: false,
-          text: '?ms',
-          describe: '编译耗时',
-          jump: false,
-        },
-        {
-          leftIcon: 'mdi-database-alert',
-          leftIconColor: 'red',
-          rightIcon: false,
-          rightIconColor: false,
-          text: '0%',
-          describe: '数据库错误率',
-          jump: false,
-        },
-        {
-          leftIcon: 'mdi-update',
-          leftIconColor: 'blue lighten-1',
-          rightIcon: false,
-          rightIconColor: false,
-          text: 'v.0.1.0',
-          describe: '软件版本',
-          jump: false,
-        }
-      ],
+      
       drawer: false,
       group: null,
     }),
     mounted() {
-      for(let item of this.$tdnetCfg.navigationList) {
-        if(item.name == this.$route.name) {
-          console.log("truie")
-          this.group = item.id
-        }
-      }
       
     },
     methods: {
